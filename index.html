@@ -27,44 +27,44 @@
                 <div class="box-title">SYSTEM DIAGNOSTICS</div>
                 <div class="box-content">
                     <div class="stat-line"><span>CPU LOAD:</span> <span class="stat-value">OPM_SECURE</span></div>
-                    <div class="stat-line" id="brain-indicator"><span>NEURAL CORE:</span> <span class="stat-value">STANDBY</span> <div class="brain-pulse"></div></div>
+                    <div class="stat-line"><span>MEM. CORE:</span> <span class="stat-value">ALLOCATED</span></div>
                     <div class="stat-line"><span>NETLINK:</span> <span class="stat-value">ENCRYPTED</span></div>
-                    <div id="memory-usage" style="font-size: 0.7rem; color: rgba(0, 255, 255, 0.5); margin-top: 5px;">0 interactions stored</div>
-                    <button id="clear-memory-btn" style="font-size: 0.6rem; padding: 2px 5px; margin-top: 5px;">PURGE MEMORY</button>
+                    <div class="stat-line brain-indicator" id="brain-indicator"><span>NEURAL CORE:</span>
+                        <div class="brain-pulse"></div> <span class="stat-value">STANDBY</span>
+                    </div>
                 </div>
             </div>
             <div class="panel-box">
                 <div class="box-title">ENVIRONMENTAL CONDITIONS</div>
-                <div class="box-content">
-                    <div id="location-display" class="stat-line"><span>LAT/LON:</span> <span class="stat-value">SEARCHING...</span> <div class="brain-pulse" style="background:#ff4d4d; box-shadow:0 0 10px #ff4d4d;"></div></div>
-                    <div id="region-display" style="font-size: 0.8rem; margin-top: 5px; text-align: right;">DETECTING REGION...</div>
-                    <div id="weather-display" class="stat-line" style="margin-top: 15px;"><span>TEMP:</span> <span class="stat-value">-- °C</span></div>
-                    <div id="weather-desc" style="font-size: 0.8rem; margin-top: 5px; text-align: right;">AWAITING DATA</div>
+                <div class="box-content env-box">
+                    <div class="stat-line"><span>LAT/LON:</span> <span class="stat-value"
+                            id="hud-coords">LOCATING...</span>
+                        <div class="gps-pulse"></div>
+                    </div>
+                    <div class="stat-line"><span>REGION:</span> <span class="stat-value" id="hud-location">AWAITING
+                            GPS</span></div>
+                    <div class="stat-line"><span>TEMP:</span> <span class="stat-value" id="hud-temp">-- °C</span></div>
+                    <div class="stat-line"><span>STATUS:</span> <span class="stat-value"
+                            id="hud-weather-desc">STANDBY</span></div>
                 </div>
             </div>
         </div>
 
-        <!-- Center Core: HUD Visuals -->
+        <!-- Center Core (The main interactive area) -->
         <div class="center-core">
-            <div class="hud-core-container">
-                <div class="ring outer-ring"></div>
-                <div class="ring middle-ring"></div>
-                <div class="ring inner-ring"></div>
-                <div class="core-hub" id="core-container">
-                    <div class="core-logo">J</div>
-                </div>
-                <div class="scanning-bar"></div>
+            <div class="jarvis-bubble-container">
+                <div class="bubble-layer back"></div>
+                <div class="bubble-layer mid"></div>
+                <div class="bubble-layer front"></div>
+                <div class="bubble-core"></div>
             </div>
-            
-            <div id="status">STATUS: ONLINE</div>
+
+            <div id="status">STATUS: STANDBY MODE</div>
             <div class="input-container">
-                <div class="input-wrapper" style="position:relative; width:60%;">
-                    <input type="text" id="command-input" placeholder="[ AWAITING COMMAND ]">
-                </div>
-                <button id="mic-btn" title="Voice Input" style="border-radius: 50%; padding: 10px 15px; margin-top: 0;">🎤</button>
+                <input type="text" id="command-input" placeholder="AWAITING COMMAND INPUT...">
+                <button id="mic-btn" title="Voice Input">🎤</button>
             </div>
-            
-            <button id="activate-btn" style="margin-top: 2rem;">INITIALIZE SYSTEMS</button>
+            <button id="activate-btn">INITIALIZE SYSTEMS</button>
         </div>
 
         <!-- Right Panels -->
@@ -73,20 +73,26 @@
                 <div class="box-title">DATA STREAM //</div>
                 <div class="data-stream">
                     01001010 01000001<br>
-                    0xBF32 MEM_OK<br>
-                    NET_LATENCY: 5ms<br>
-                    UPLINK ESTABLISHED.<br>
-                    SCANNING...
+                    01010010 01010110<br>
+                    01001001 01010011<br>
+                    ONLINE... SYNCING.<br>
+                    SECURE SHELL OPEN.<br>
+                    READY FOR INPUT.
                 </div>
             </div>
             <div class="panel-box">
                 <div class="box-title">AUDIO WAVELENGTH</div>
-                <div class="audio-wavelength">
-                    <div class="visualizer">
-                        <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
-                        <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
-                        <div class="bar"></div><div class="bar"></div>
-                    </div>
+                <div class="sound-wave">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
                 </div>
             </div>
         </div>

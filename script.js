@@ -15,8 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const clearMemoryBtn = document.getElementById('clear-memory-btn');
     const memoryUsageEl = document.getElementById('memory-usage');
     const brainIndicator = document.getElementById('brain-indicator');
-    const mathLog = document.getElementById('math-log');
-    const legalLog = document.getElementById('legal-log');
 
     let isActivated = false;
 
@@ -126,16 +124,6 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 coreContainer.classList.add('core-thinking');
                 statusDiv.textContent = 'STATUS: THINKING...';
-                
-                if (mathLog) {
-                    mathLog.innerHTML += `>> ANALYZING_QUERY...<br>`;
-                    mathLog.scrollTop = mathLog.scrollHeight;
-                }
-                
-                if (legalLog) {
-                    legalLog.innerHTML += `>> SEARCHING_CONSTITUTIONAL_ARCHIVE...<br>`;
-                    legalLog.scrollTop = legalLog.scrollHeight;
-                }
 
                 // The history needs to be mapped to the correct roles for the API
                 const formattedHistory = this.history.map(h => ({
@@ -156,8 +144,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                 role: "system", 
                                 content: `You are J.A.R.V.I.S., a highly advanced AI system. 
                                 Your primary directive is to assist with absolute precision.
-                                MATHEMATICS CORE: You have access to all mathematical knowledge. Solve problems step-by-step. Use high precision for calculus, physics, and algebra. 
-                                CONSTITUTIONAL CORE: You have complete knowledge of the Indian Constitution (Preamble, Parts, Articles, Schedules). Cite specific Articles when discussing laws or rights.
                                 Your tone is professional, efficient, and slightly protective. Use "sir" where appropriate.`
                             },
                             ...formattedHistory,
@@ -179,17 +165,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (this.history.length > 20) this.history = this.history.slice(-20);
                     localStorage.setItem('jarvis_memory', JSON.stringify(this.history));
                     this.updateNeuralStatus();
-                    
-                    if (mathLog) {
-                        mathLog.innerHTML += `>> CALCULATION_COMPLETE.<br>`;
-                        mathLog.scrollTop = mathLog.scrollHeight;
-                    }
-                    
-                    if (legalLog) {
-                        legalLog.innerHTML += `>> LEGAL_QUERY_RESOLVED.<br>`;
-                        legalLog.scrollTop = legalLog.scrollHeight;
-                    }
-                    
                     return reply;
                 }
                 return "I encountered a cognitive error, sir. The Groq link is unstable.";
