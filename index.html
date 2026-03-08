@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>J.A.R.V.I.S AI Assistant</title>
+    <meta name="theme-color" content="#4df8ff">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="scanlines"></div>
+    <div class="vignette"></div>
+    <div class="hud-container">
+        <!-- Top Info Bar -->
+        <div class="top-bar">
+            <div class="sys-time" id="hud-time">00:00:00</div>
+            <div class="sys-title">J.A.R.V.I.S. // OS_V_3.0</div>
+            <button class="neural-link-btn" id="neural-link-btn">GROQ LINK: OFFLINE</button>
+            <div class="sys-date" id="hud-date">YYYY-MM-DD</div>
+        </div>
+
+        <!-- Left Panels -->
+        <div class="side-panel left-panel">
+            <div class="panel-box">
+                <div class="box-title">SYSTEM DIAGNOSTICS</div>
+                <div class="box-content">
+                    <div class="stat-line"><span>CPU LOAD:</span> <span class="stat-value">OPM_SECURE</span></div>
+                    <div class="stat-line" id="brain-indicator"><span>NEURAL CORE:</span> <span class="stat-value">STANDBY</span> <div class="brain-pulse"></div></div>
+                    <div class="stat-line"><span>NETLINK:</span> <span class="stat-value">ENCRYPTED</span></div>
+                    <div id="memory-usage" style="font-size: 0.7rem; color: rgba(0, 255, 255, 0.5); margin-top: 5px;">0 interactions stored</div>
+                    <button id="clear-memory-btn" style="font-size: 0.6rem; padding: 2px 5px; margin-top: 5px;">PURGE MEMORY</button>
+                </div>
+            </div>
+            <div class="panel-box">
+                <div class="box-title">ENVIRONMENTAL CONDITIONS</div>
+                <div class="box-content">
+                    <div id="location-display" class="stat-line"><span>LAT/LON:</span> <span class="stat-value">SEARCHING...</span> <div class="brain-pulse" style="background:#ff4d4d; box-shadow:0 0 10px #ff4d4d;"></div></div>
+                    <div id="region-display" style="font-size: 0.8rem; margin-top: 5px; text-align: right;">DETECTING REGION...</div>
+                    <div id="weather-display" class="stat-line" style="margin-top: 15px;"><span>TEMP:</span> <span class="stat-value">-- °C</span></div>
+                    <div id="weather-desc" style="font-size: 0.8rem; margin-top: 5px; text-align: right;">AWAITING DATA</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Center Core: HUD Visuals -->
+        <div class="center-core">
+            <div class="hud-core-container">
+                <div class="ring outer-ring"></div>
+                <div class="ring middle-ring"></div>
+                <div class="ring inner-ring"></div>
+                <div class="core-hub" id="core-container">
+                    <div class="core-logo">J</div>
+                </div>
+                <div class="scanning-bar"></div>
+            </div>
+            
+            <div id="status">STATUS: ONLINE</div>
+            <div class="input-container">
+                <div class="input-wrapper" style="position:relative; width:60%;">
+                    <input type="text" id="command-input" placeholder="[ AWAITING COMMAND ]">
+                </div>
+                <button id="mic-btn" title="Voice Input" style="border-radius: 50%; padding: 10px 15px; margin-top: 0;">🎤</button>
+            </div>
+            
+            <button id="activate-btn" style="margin-top: 2rem;">INITIALIZE SYSTEMS</button>
+        </div>
+
+        <!-- Right Panels -->
+        <div class="side-panel right-panel">
+            <div class="panel-box">
+                <div class="box-title">DATA STREAM //</div>
+                <div class="data-stream">
+                    01001010 01000001<br>
+                    0xBF32 MEM_OK<br>
+                    NET_LATENCY: 5ms<br>
+                    UPLINK ESTABLISHED.<br>
+                    SCANNING...
+                </div>
+            </div>
+            <div class="panel-box">
+                <div class="box-title">AUDIO WAVELENGTH</div>
+                <div class="audio-wavelength">
+                    <div class="visualizer">
+                        <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                        <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                        <div class="bar"></div><div class="bar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Decorative Corners -->
+        <div class="corner top-left"></div>
+        <div class="corner top-right"></div>
+        <div class="corner bottom-left"></div>
+        <div class="corner bottom-right"></div>
+    </div>
+    <!-- Settings Modal -->
+    <div class="overlay" id="overlay"></div>
+    <div class="settings-modal" id="settings-modal">
+        <h2>NEURAL LINK SETTINGS</h2>
+        <div class="setting-group">
+            <label for="api-key">GROQ API KEY:</label>
+            <input type="password" id="api-key" placeholder="Enter your API key...">
+        </div>
+        <div class="setting-group">
+            <label>MEMORY STATUS:</label>
+            <div id="memory-usage" style="font-size: 0.8rem; color: #aaa;">0 interactions stored</div>
+        </div>
+        <div class="modal-actions">
+            <button id="clear-memory-btn">PURGE MEMORY</button>
+            <button id="save-settings-btn">SYNC LINK</button>
+            <button id="close-settings-btn">CLOSE</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

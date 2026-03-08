@@ -1,0 +1,898 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+    background-color: #030a16;
+    color: #4df8ff;
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    /* Add subtle background grid */
+    background-image:
+        linear-gradient(rgba(77, 248, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(77, 248, 255, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+}
+
+.hud-container {
+    display: grid;
+    grid-template-columns: 300px 1fr 300px;
+    grid-template-rows: 60px 1fr;
+    min-height: 100vh;
+    padding: 2rem;
+    position: relative;
+    /* Overall HUD glow */
+    box-shadow: 0 0 100px rgba(77, 248, 255, 0.1) inset;
+}
+
+/* Typography and Text Colors */
+h1 {
+    display: none;
+    /* Hide old title */
+}
+
+/* Buttons and Inputs */
+button {
+    background-color: transparent;
+    color: #4df8ff;
+    border: 1px solid #4df8ff;
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    font-family: 'Share Tech Mono', monospace;
+    cursor: pointer;
+    margin-top: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(77, 248, 255, 0.2) inset;
+    text-shadow: 0 0 5px #4df8ff;
+}
+
+button:hover {
+    background-color: rgba(77, 248, 255, 0.2);
+    box-shadow: 0 0 20px rgba(77, 248, 255, 0.5) inset, 0 0 10px #4df8ff;
+}
+
+#status {
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    text-shadow: 0 0 5px #4df8ff;
+    letter-spacing: 1px;
+    border-top: 1px solid rgba(77, 248, 255, 0.3);
+    border-bottom: 1px solid rgba(77, 248, 255, 0.3);
+    padding: 10px 0;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Spinning Bubble Visual Core Styling */
+.jarvis-bubble-container {
+    position: relative;
+    width: 250px;
+    height: 250px;
+    margin: 2rem auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1000px;
+    transform-style: preserve-3d;
+}
+
+.bubble-layer {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: transparent;
+    border: 2px solid rgba(56, 189, 248, 0.4);
+    /* Create a grid/mosaic look using repeating gradients */
+    background-image:
+        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(56, 189, 248, 0.2) 10px, rgba(56, 189, 248, 0.2) 20px),
+        repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(56, 189, 248, 0.2) 10px, rgba(56, 189, 248, 0.2) 20px);
+    background-size: 50px 50px;
+    background-position: center;
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.5) inset, 0 0 30px rgba(56, 189, 248, 0.3);
+    transition: all 0.5s ease;
+}
+
+.bubble-layer.back {
+    transform: rotateY(45deg) rotateX(45deg);
+    animation: spin-axis-1 12s linear infinite;
+    opacity: 0.6;
+}
+
+.bubble-layer.mid {
+    transform: rotateY(-45deg) rotateX(-45deg);
+    animation: spin-axis-2 8s linear infinite;
+    opacity: 0.8;
+}
+
+.bubble-layer.front {
+    transform: rotateZ(30deg);
+    animation: spin-axis-3 15s linear infinite reverse;
+    border: 3px solid rgba(56, 189, 248, 0.8);
+    background-image: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4) 0%, transparent 40%);
+}
+
+.bubble-core {
+    position: absolute;
+    width: 40%;
+    height: 40%;
+    background: radial-gradient(circle, #fff 10%, #38bdf8 50%, transparent 70%);
+    border-radius: 50%;
+    box-shadow: 0 0 50px #fff, 0 0 30px #38bdf8;
+    animation: core-pulse 4s ease-in-out infinite;
+    z-index: 10;
+}
+
+/* State Classes for JavaScript */
+.core-listening .bubble-layer {
+    border-color: rgba(248, 113, 113, 0.6);
+    background-image:
+        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(248, 113, 113, 0.2) 10px, rgba(248, 113, 113, 0.2) 20px),
+        repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(248, 113, 113, 0.2) 10px, rgba(248, 113, 113, 0.2) 20px);
+    box-shadow: 0 0 30px rgba(248, 113, 113, 0.7) inset, 0 0 40px rgba(248, 113, 113, 0.5);
+}
+
+.core-listening .bubble-layer.back {
+    animation-duration: 6s;
+}
+
+.core-listening .bubble-layer.mid {
+    animation-duration: 4s;
+}
+
+.core-listening .bubble-layer.front {
+    animation-duration: 7s;
+    border-color: rgba(248, 113, 113, 0.9);
+}
+
+.core-listening .bubble-core {
+    background: radial-gradient(circle, #fff 10%, #f87171 50%, transparent 70%);
+    box-shadow: 0 0 60px #fff, 0 0 40px #f87171;
+    animation: core-pulse-listening 1s ease-in-out infinite;
+}
+
+.core-speaking .bubble-core {
+    animation: core-pulse-speaking 0.2s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+}
+
+/* Animations */
+@keyframes spin-axis-1 {
+    0% {
+        transform: rotateY(45deg) rotateX(45deg) rotateZ(0deg);
+    }
+
+    100% {
+        transform: rotateY(45deg) rotateX(45deg) rotateZ(360deg);
+    }
+}
+
+@keyframes spin-axis-2 {
+    0% {
+        transform: rotateY(-45deg) rotateX(-45deg) rotateZ(0deg);
+    }
+
+    100% {
+        transform: rotateY(-45deg) rotateX(-45deg) rotateZ(360deg);
+    }
+}
+
+@keyframes spin-axis-3 {
+    0% {
+        transform: rotateZ(30deg) rotateX(0deg);
+    }
+
+    100% {
+        transform: rotateZ(30deg) rotateX(360deg);
+    }
+}
+
+@keyframes core-pulse {
+
+    0%,
+    100% {
+        transform: scale(0.9);
+        opacity: 0.8;
+    }
+
+    50% {
+        transform: scale(1.1);
+        opacity: 1;
+        box-shadow: 0 0 70px #fff, 0 0 40px #38bdf8;
+    }
+}
+
+@keyframes core-pulse-listening {
+
+    0%,
+    100% {
+        transform: scale(0.85);
+        opacity: 0.7;
+    }
+
+    50% {
+        transform: scale(1.15);
+        opacity: 1;
+        box-shadow: 0 0 80px #fff, 0 0 60px #f87171;
+    }
+}
+
+@keyframes core-pulse-speaking {
+    0% {
+        transform: scale(0.95);
+        opacity: 0.8;
+    }
+
+    50% {
+        transform: scale(1.1);
+        opacity: 1;
+        box-shadow: 0 0 50px #fff, 0 0 30px #38bdf8;
+    }
+
+    100% {
+        transform: scale(1.2);
+        opacity: 1;
+        box-shadow: 0 0 80px #fff, 0 0 60px #38bdf8;
+        border: 2px solid white;
+    }
+}
+
+
+.input-container {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+/* HUD Layout Elements */
+.top-bar {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 2px solid rgba(77, 248, 255, 0.5);
+    padding-bottom: 10px;
+    text-shadow: 0 0 5px #4df8ff;
+    font-size: 1.2rem;
+}
+
+.sys-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    letter-spacing: 4px;
+}
+
+.side-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.panel-box {
+    border: 1px solid rgba(77, 248, 255, 0.3);
+    background-color: rgba(3, 10, 22, 0.7);
+    padding: 1rem;
+    position: relative;
+    box-shadow: 0 0 15px rgba(77, 248, 255, 0.1) inset;
+}
+
+/* Panel Box Corner Accents */
+.panel-box::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    width: 20px;
+    height: 2px;
+    background: #4df8ff;
+    box-shadow: 0 0 10px #4df8ff;
+}
+
+.panel-box::after {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    width: 2px;
+    height: 20px;
+    background: #4df8ff;
+    box-shadow: 0 0 10px #4df8ff;
+}
+
+.box-title {
+    border-bottom: 1px solid rgba(77, 248, 255, 0.5);
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    word-spacing: 5px;
+}
+
+.stat-line {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+}
+
+.center-core {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* Input Fields Overhaul for HUD */
+.input-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+#command-input {
+    background-color: rgba(3, 10, 22, 0.8);
+    border: 1px solid rgba(77, 248, 255, 0.5);
+    border-left: 5px solid #4df8ff;
+    color: #4df8ff;
+    padding: 10px 15px;
+    font-family: inherit;
+    font-size: 1rem;
+    width: 50%;
+    outline: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(77, 248, 255, 0.1) inset;
+}
+
+#command-input:focus {
+    box-shadow: 0 0 20px rgba(77, 248, 255, 0.3) inset, 0 0 10px rgba(77, 248, 255, 0.5);
+    border-color: #4df8ff;
+}
+
+#mic-btn {
+    margin-top: 0;
+    width: 45px;
+    height: 45px;
+    border-radius: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+/* Decorative Widgets */
+.data-stream {
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: rgba(77, 248, 255, 0.7);
+    animation: flicker 4s infinite;
+}
+
+/* Environmental Box Styles */
+.env-box {
+    margin-top: 10px;
+    padding: 10px;
+}
+
+.env-box .stat-line {
+    margin-bottom: 15px;
+    align-items: center;
+}
+
+.env-box span {
+    color: rgba(77, 248, 255, 0.7);
+}
+
+.env-box .stat-value {
+    color: #fff;
+    font-weight: bold;
+    text-shadow: 0 0 5px #4df8ff;
+    flex-grow: 1;
+    text-align: right;
+    margin-right: 10px;
+}
+
+.gps-pulse {
+    width: 10px;
+    height: 10px;
+    background-color: #f87171;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #f87171;
+    animation: gps-ping 1.5s infinite;
+}
+
+@keyframes gps-ping {
+    0% {
+        transform: scale(0.8);
+        opacity: 0.5;
+        box-shadow: 0 0 0 0 rgba(248, 113, 113, 0.7);
+    }
+
+    70% {
+        transform: scale(1.2);
+        opacity: 1;
+        box-shadow: 0 0 0 10px rgba(248, 113, 113, 0);
+    }
+
+    100% {
+        transform: scale(0.8);
+        opacity: 0.5;
+        box-shadow: 0 0 0 0 rgba(248, 113, 113, 0);
+    }
+}
+
+.sound-wave {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 50px;
+}
+
+.bar {
+    width: 8px;
+    background-color: #4df8ff;
+    box-shadow: 0 0 5px #4df8ff;
+    height: 5px;
+    transition: height 0.1s ease;
+}
+
+/* Main Screen Corners */
+.corner {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    pointer-events: none;
+    border-color: #4df8ff;
+    border-style: solid;
+    box-shadow: 0 0 10px #4df8ff inset, 0 0 10px #4df8ff;
+}
+
+.top-left {
+    top: 20px;
+    left: 20px;
+    border-width: 5px 0 0 5px;
+}
+
+.top-right {
+    top: 20px;
+    right: 20px;
+    border-width: 5px 5px 0 0;
+}
+
+.bottom-left {
+    bottom: 20px;
+    left: 20px;
+    border-width: 0 0 5px 5px;
+}
+
+.bottom-right {
+    bottom: 20px;
+    right: 20px;
+    border-width: 0 5px 5px 0;
+}
+
+/* Tweak bubble colors for new neon blue scheme */
+.bubble-layer {
+    border: 2px solid rgba(77, 248, 255, 0.4);
+    box-shadow: 0 0 20px rgba(77, 248, 255, 0.5) inset, 0 0 30px rgba(77, 248, 255, 0.3);
+}
+
+.bubble-layer.front {
+    border: 3px solid rgba(77, 248, 255, 0.8);
+}
+
+.bubble-core {
+    background: radial-gradient(circle, #fff 10%, #4df8ff 50%, transparent 70%);
+    box-shadow: 0 0 50px #fff, 0 0 30px #4df8ff;
+}
+
+.core-speaking .bubble-core {
+    box-shadow: 0 0 80px #fff, 0 0 60px #4df8ff;
+}
+
+/* Helper Animations */
+@keyframes flicker {
+    0% {
+        opacity: 0.8;
+    }
+
+    5% {
+        opacity: 0.5;
+    }
+
+    10% {
+        opacity: 0.9;
+    }
+
+    15% {
+        opacity: 0.4;
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.8;
+    }
+}
+
+@keyframes radar-sweep {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* ========================================= */
+/* MOBILE RESPONSIVE LAYOUT (SMARTPHONES)    */
+/* ========================================= */
+@media screen and (max-width: 800px) {
+    body {
+        overflow-y: auto;
+        /* Allow scrolling on phones */
+    }
+
+    .hud-container {
+        display: flex;
+        /* Switch from grid to flex column for mobile stacking */
+        flex-direction: column;
+        padding: 1rem;
+        height: auto;
+        min-height: 100vh;
+        gap: 1rem;
+    }
+
+    .top-bar {
+        font-size: 0.9rem;
+        flex-wrap: wrap;
+        text-align: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .sys-title {
+        width: 100%;
+        order: -1;
+        font-size: 1.2rem;
+    }
+
+    /* Shrink the core bubble */
+    .jarvis-bubble-container {
+        width: 180px;
+        height: 180px;
+        margin: 1rem auto;
+    }
+
+    /* Stack panels vertically */
+    .side-panel {
+        width: 100%;
+        margin-top: 0;
+        gap: 1rem;
+        flex-direction: row;
+        /* Put panels side by side if possible */
+        flex-wrap: wrap;
+    }
+
+    .panel-box {
+        flex: 1 1 45%;
+        font-size: 0.8rem;
+    }
+
+    /* Hide decorative corners on small screens */
+    .corner {
+        display: none;
+    }
+
+    .input-container {
+        flex-direction: column;
+    }
+
+    #command-input {
+        width: 90%;
+    }
+
+    #language-select,
+    #mic-btn {
+        width: 90%;
+    }
+
+    #status {
+        width: 95%;
+        font-size: 1rem;
+    }
+
+    /* Adjust Radar Size */
+    .radar-box {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+/* ========================================= */
+/* NEURAL LINK & SETTINGS                    */
+/* ========================================= */
+
+.neural-link-btn {
+    position: absolute;
+    top: 15px;
+    right: 250px;
+    background: transparent;
+    border: 1px solid rgba(77, 248, 255, 0.4);
+    color: #4df8ff;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    z-index: 100;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 5px #4df8ff;
+    box-shadow: 0 0 5px rgba(77, 248, 255, 0.2);
+}
+
+.neural-link-btn:hover {
+    background: rgba(77, 248, 255, 0.1);
+    border-color: #4df8ff;
+    box-shadow: 0 0 10px #4df8ff;
+}
+
+.settings-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    width: 400px;
+    background: rgba(3, 10, 22, 0.95);
+    border: 1px solid #4df8ff;
+    padding: 2rem;
+    z-index: 1000;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 0 50px rgba(77, 248, 255, 0.2), 0 0 20px rgba(77, 248, 255, 0.1) inset;
+    backdrop-filter: blur(10px);
+}
+
+.settings-modal.active {
+    visibility: visible;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.settings-modal h2 {
+    margin-top: 0;
+    border-bottom: 1px solid rgba(77, 248, 255, 0.5);
+    padding-bottom: 10px;
+    letter-spacing: 3px;
+    font-size: 1.2rem;
+}
+
+.setting-group {
+    margin-bottom: 1.5rem;
+}
+
+.setting-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: rgba(77, 248, 255, 0.8);
+}
+
+.setting-group input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(77, 248, 255, 0.3);
+    color: #fff;
+    padding: 8px 12px;
+    font-family: inherit;
+    outline: none;
+}
+
+.setting-group input:focus {
+    border-color: #4df8ff;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 2rem;
+}
+
+.modal-actions button {
+    margin-top: 0;
+    padding: 5px 15px;
+    font-size: 0.9rem;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 999;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.overlay.active {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Thinking State Animation */
+.core-thinking .bubble-layer {
+    animation-duration: 1.5s !important;
+    border-color: rgba(167, 139, 250, 0.6);
+    /* Purple-ish cyan */
+    box-shadow: 0 0 40px rgba(167, 139, 250, 0.5) inset;
+}
+
+.core-thinking .bubble-core {
+    background: radial-gradient(circle, #fff 10%, #a78bfa 50%, transparent 70%);
+    box-shadow: 0 0 70px #fff, 0 0 50px #a78bfa;
+    animation: core-pulse-thinking 0.5s infinite alternate;
+}
+
+@keyframes core-pulse-thinking {
+    0% {
+        transform: scale(1);
+        opacity: 0.9;
+    }
+
+    100% {
+        transform: scale(1.2);
+        opacity: 1;
+        filter: hue-rotate(45deg);
+    }
+}
+
+/* Brain Data visualization */
+.brain-indicator {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.brain-pulse {
+    width: 8px;
+    height: 8px;
+    background: #a78bfa;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #a78bfa;
+    opacity: 0.3;
+}
+
+.neural-active .brain-pulse {
+    opacity: 1;
+    animation: brain-blink 2s infinite;
+}
+
+@keyframes brain-blink {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+
+    50% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+}
+
+/* Brain Data visualization */
+.brain-indicator {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.brain-pulse {
+    width: 8px;
+    height: 8px;
+    background: #a78bfa;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #a78bfa;
+    opacity: 0.3;
+}
+
+.neural-active .brain-pulse {
+    opacity: 1;
+    animation: brain-blink 2s infinite;
+}
+
+@keyframes brain-blink {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+
+    50% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+}
+
+/* ========================================= */
+/* ANALYTICAL ENGINE (MATH LOG)              */
+/* ========================================= */
+
+.math-display {
+    font-size: 0.75rem;
+    color: var(--neon-cyan);
+    font-family: 'Rajdhani', sans-serif;
+    height: 120px;
+    overflow-y: auto;
+    padding-right: 5px;
+    line-height: 1.4;
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+}
+
+.math-display::-webkit-scrollbar {
+    width: 3px;
+}
+
+.math-display::-webkit-scrollbar-thumb {
+    background: var(--neon-cyan);
+    border-radius: 10px;
+}
+
+.math-active {
+    animation: flicker 1s infinite;
+    color: #fff;
+}
+
+/* ========================================= */
+/* LEGAL ARCHIVE (CONSTITUTION LOG)          */
+/* ========================================= */
+
+.legal-display {
+    font-size: 0.75rem;
+    color: var(--neon-cyan);
+    font-family: 'Rajdhani', sans-serif;
+    height: 120px;
+    overflow-y: auto;
+    padding-right: 5px;
+    line-height: 1.4;
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+    border-left: 1px solid rgba(0, 255, 255, 0.2);
+    padding-left: 10px;
+}
+
+.legal-display::-webkit-scrollbar {
+    width: 3px;
+}
+
+.legal-display::-webkit-scrollbar-thumb {
+    background: var(--neon-cyan);
+    border-radius: 10px;
+}
+
+.legal-active {
+    animation: flicker 1s infinite;
+    color: #ffd700; /* Gold accent for legal status */
+}
